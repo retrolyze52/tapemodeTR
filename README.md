@@ -5,7 +5,7 @@ A UserScript that replaces the standard TypeRacer input box with a customizable,
 ## Installation
 
 1. Install a script manager extension like **Tampermonkey** or **Violentmonkey**.
-2. [Click here to install the script](https://raw.githubusercontent.com/retrolyze52/tapemodeTR/refs/heads/main/tapemode.js).
+2. [Click here to install the script](https://github.com/retrolyze52/tapemodeTR/raw/refs/heads/main/tapemode.user.js).
 
 ## Features
 
