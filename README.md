@@ -24,4 +24,5 @@ A UserScript that replaces the standard TypeRacer input box with a customizable,
 3. Configure your fonts, colors, and ghost speed. Settings are saved automatically.
 
 ## Credits
-* Pacemaker concept adapted from [PoemOnTyperacer](https://github.com/PoemOnTyperacer/).
+* Pacemaker concept adapted from [PoemOnTyperacer](https://github.com/PoemOnTyperacer/). 
+* Countdown feature adapted from [altrocality](https://github.com/altrocality).
