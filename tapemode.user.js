@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TypeRacer: Tape Mode
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  A highly customizable, tape mode for TypeRacer
 // @author       miyakejima / polka7 / misstheoretical
 // @match        *://play.typeracer.com/*
@@ -16,7 +16,6 @@
     'use strict';
 
     const GOOGLE_FONTS_URL = "https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Fira+Code:wght@300..700&family=IBM+Plex+Mono:wght@100..700&family=Inconsolata:wght@200..900&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..800&family=Merriweather:wght@300..900&family=Montserrat:wght@100..900&family=Nunito:wght@200..1000&family=Open+Sans:wght@300..800&family=Oxygen+Mono&family=PT+Mono&family=Playfair+Display:wght@400..900&family=Raleway:wght@100..900&family=Roboto+Mono:wght@100..700&family=Roboto+Slab:wght@100..900&family=Roboto:wght@100..900&family=Source+Code+Pro:wght@200..900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Ubuntu+Mono:wght@400;700&display=swap";
-
     const DEFAULTS = {
         coverMode: true,
         smartLock: false,
@@ -138,7 +137,8 @@
             .cursor, .caret, .blink { opacity: 0 !important; visibility: hidden !important; display: none !important; }
 
             #tr-focus-dimmer {
-                position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                position: fixed;
+                top: 0; left: 0; width: 100vw; height: 100vh;
                 background: rgba(0,0,0, ${CFG.focusOpacity});
                 z-index: 999900;
                 opacity: 0; pointer-events: none;
@@ -179,10 +179,12 @@
             }
 
             #tr-tape-mask {
-                width: 100%; height: 100%; overflow: hidden; position: relative; contain: strict;
+                width: 100%;
+                height: 100%; overflow: hidden; position: relative; contain: strict;
             }
             #tr-tape-strip {
-                position: absolute; left: 50%; top: 0; bottom: 0;
+                position: absolute;
+                left: 50%; top: 0; bottom: 0;
                 display: flex; align-items: center;
                 white-space: pre;
                 font-family: ${CFG.fontFamily};
@@ -208,23 +210,27 @@
                 transform: translateX(-50%);
             }
             #tr-tape-ghost {
-                position: absolute; left: 0;
+                position: absolute;
+                left: 0;
                 top: 25%; bottom: 25%;
                 height: auto;
                 width: ${CFG.cursorWidth}px;
                 background-color: ${CFG.pacemakerColor};
                 z-index: 10; opacity: 0.6; border-radius: 2px;
-                will-change: transform; pointer-events: none;
+                will-change: transform;
+                pointer-events: none;
             }
             #tr-live-wpm {
-                position: absolute; left: 50%;
+                position: absolute;
+                left: 50%;
                 bottom: 100%;
                 transform: translateX(-50%) translateY(-10px);
                 color: #eee;
                 font-family: 'Segoe UI', Roboto, sans-serif;
                 font-size: ${CFG.wpmFontSize}px;
                 font-weight: 800;
-                white-space: nowrap; opacity: 0;
+                white-space: nowrap;
+                opacity: 0;
                 transition: opacity 0.2s, color 0.2s;
                 z-index: 1000005; pointer-events: none;
                 text-shadow: 0 2px 4px rgba(0,0,0,0.8);
@@ -234,7 +240,8 @@
                 padding: 0;
             }
             #tr-progress-bar {
-                position: absolute; bottom: 0; left: 0; height: 3px;
+                position: absolute;
+                bottom: 0; left: 0; height: 3px;
                 background: #4caf50; width: 0%;
                 transition: width 0.1s linear;
                 z-index: 25;
@@ -293,7 +300,6 @@
         overlay.id = 'tr-ui-overlay';
         overlay.onclick = (e) => { if (e.target === overlay) toggleMenu(); };
         let fontOpts = FONT_OPTIONS.map(f => `<option value="${f.val}" ${CFG.fontFamily === f.val ? 'selected' : ''}>${f.name}</option>`).join('');
-
         overlay.innerHTML = `
             <div id="tr-ui-modal">
                 <div class="tr-sidebar">
@@ -323,7 +329,7 @@
                                 <div class="tr-group-title">Dimensions</div>
                                 <div class="tr-row"><div><div class="tr-label">Tape Height</div><span class="tr-sublabel">Manual height control</span></div><div class="tr-slider-container"><input type="range" class="tr-range" id="cfg-tapeHeight" min="40" max="250" value="${CFG.tapeHeight}" oninput="document.getElementById('val-height').innerText=this.value"><span id="val-height" class="tr-range-val">${CFG.tapeHeight}</span></div></div>
                                 <div class="tr-row"><div><div class="tr-label">Custom Width</div></div><div class="tr-slider-container"><input type="range" class="tr-range" id="cfg-tapeWidth" min="200" max="1500" value="${CFG.tapeWidth}" oninput="document.getElementById('val-width').innerText=this.value"><span id="val-width" class="tr-range-val">${CFG.tapeWidth}</span></div></div>
-                            </div>
+                             </div>
                             <div class="tr-group">
                                 <div class="tr-group-title">Positioning</div>
                                 <div class="tr-row"><div><div class="tr-label">Enable Dragging</div></div><label class="tr-switch"><input type="checkbox" id="cfg-manualPositioning" ${CFG.manualPositioning ? 'checked' : ''}><span class="tr-slider"></span></label></div>
@@ -374,7 +380,7 @@
                                 <div class="tr-row"><div><div class="tr-label">Consistent Color</div><span class="tr-sublabel">Disable rainbow WPM</span></div><label class="tr-switch"><input type="checkbox" id="cfg-wpmColorMatch" ${CFG.wpmColorMatch ? 'checked' : ''}><span class="tr-slider"></span></label></div>
                                 <div class="tr-row"><div><div class="tr-label">WPM Size</div></div><div class="tr-slider-container"><input type="range" class="tr-range" id="cfg-wpmFontSize" min="10" max="80" value="${CFG.wpmFontSize}" oninput="document.getElementById('val-wpmSize').innerText=this.value"><span id="val-wpmSize" class="tr-range-val">${CFG.wpmFontSize}</span></div></div>
                                 <div class="tr-row"><div><div class="tr-label">WPM Rate</div></div><div class="tr-slider-container"><input type="range" class="tr-range" id="cfg-wpmUpdateInterval" min="0" max="5000" step="100" value="${CFG.wpmUpdateInterval}" oninput="document.getElementById('val-wpmRate').innerText=this.value"><span id="val-wpmRate" class="tr-range-val">${CFG.wpmUpdateInterval}</span></div></div>
-                            </div>
+                             </div>
                             <div class="tr-group">
                                 <div class="tr-group-title">Pacemaker</div>
                                 <div class="tr-row"><div><div class="tr-label">Enable</div></div><label class="tr-switch"><input type="checkbox" id="cfg-pacemakerMode" ${CFG.pacemakerMode ? 'checked' : ''}><span class="tr-slider"></span></label></div>
@@ -411,13 +417,14 @@
                     </div>
                     <div class="tr-footer"><button class="tr-btn tr-btn-ghost" id="tr-btn-cancel">Cancel</button><button class="tr-btn tr-btn-primary" id="tr-btn-save">Save</button></div>
                 </div>
-            </div>
+             </div>
         `;
         document.body.appendChild(overlay);
         const tabs=overlay.querySelectorAll('.tr-tab-btn'); const panes=overlay.querySelectorAll('.tr-tab-pane');
         tabs.forEach(tab=>{ tab.addEventListener('click',()=>{ tabs.forEach(t=>t.classList.remove('active')); panes.forEach(p=>p.classList.remove('active')); tab.classList.add('active'); document.getElementById(tab.dataset.tab).classList.add('active'); }); });
         document.getElementById('tr-btn-save').onclick=()=>{
-            CFG.coverMode=document.getElementById('cfg-coverMode').checked; CFG.smartLock=document.getElementById('cfg-smartLock').checked;
+            CFG.coverMode=document.getElementById('cfg-coverMode').checked;
+            CFG.smartLock=document.getElementById('cfg-smartLock').checked;
             CFG.hideInput=document.getElementById('cfg-hideInput').checked; CFG.manualPositioning=document.getElementById('cfg-manualPositioning').checked;
             CFG.hideRaceTrack=document.getElementById('cfg-hideRaceTrack').checked;
             CFG.tapeWidth=parseInt(document.getElementById('cfg-tapeWidth').value);
@@ -428,7 +435,8 @@
             CFG.bg=document.getElementById('cfg-bg').value; CFG.textMain=document.getElementById('cfg-textMain').value; CFG.textCorrect=document.getElementById('cfg-textCorrect').value; CFG.textError=document.getElementById('cfg-textError').value;
             CFG.cursorColor=document.getElementById('cfg-cursorColor').value;
             CFG.pacemakerMode=document.getElementById('cfg-pacemakerMode').checked; CFG.pacemakerWpm=parseInt(document.getElementById('cfg-pacemakerWpm').value); CFG.pacemakerColor=document.getElementById('cfg-pacemakerColor').value;
-            CFG.smoothness=parseFloat(document.getElementById('cfg-smoothness').value); CFG.windowOpacity=parseInt(document.getElementById('cfg-windowOpacity').value);
+            CFG.smoothness=parseFloat(document.getElementById('cfg-smoothness').value);
+            CFG.windowOpacity=parseInt(document.getElementById('cfg-windowOpacity').value);
             CFG.showLiveWpm=document.getElementById('cfg-showLiveWpm').checked; CFG.wpmUpdateInterval=parseInt(document.getElementById('cfg-wpmUpdateInterval').value);
             CFG.wpmColorMatch=document.getElementById('cfg-wpmColorMatch').checked;
             CFG.showProgressBar=document.getElementById('cfg-showProgressBar').checked;
@@ -451,11 +459,16 @@
             ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
             ::-webkit-scrollbar-thumb:hover { background: #555; }
 
-            #tr-ui-btn { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #111; color: #eee; border-radius: 50%; border: 2px solid #333; display: flex;
-            justify-content: center; align-items: center; font-size: 24px; cursor: pointer; z-index: 1000000; opacity: 0.5; transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+            #tr-ui-btn { position: fixed; bottom: 30px; right: 30px;
+                width: 50px; height: 50px; background: #111; color: #eee; border-radius: 50%; border: 2px solid #333; display: flex;
+                justify-content: center; align-items: center;
+                font-size: 24px; cursor: pointer; z-index: 1000000; opacity: 0.5; transition: all 0.2s ease;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            }
             #tr-ui-btn:hover { opacity: 1; transform: scale(1.1) rotate(90deg); border-color: #fff; }
-            #tr-ui-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(3px); z-index: 1000001; display: none; justify-content: center; align-items: center; }
+            #tr-ui-overlay { position: fixed; top: 0;
+                left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); backdrop-filter: blur(3px); z-index: 1000001; display: none; justify-content: center; align-items: center;
+            }
 
             #tr-ui-modal {
                 box-sizing: border-box;
@@ -465,9 +478,15 @@
                 box-shadow: 0 20px 50px rgba(0,0,0,0.9); font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; color: #eee; font-size: 14px; overflow: hidden;
             }
 
-            .tr-sidebar { box-sizing: border-box; flex: 0 0 180px; background: #050505; border-right: 1px solid #222; padding: 1rem 0; display: flex; flex-direction: column; overflow-y: auto; }
-            .tr-sidebar-header { padding: 0 1.2rem 1.2rem 1.2rem; font-size: 1.1rem; font-weight: bold; color: #fff; border-bottom: 1px solid #222; margin-bottom: 0.5rem; }
-            .tr-tab-btn { padding: 0.8rem 1.2rem; cursor: pointer; color: #666; transition: 0.2s; font-size: 0.9rem; border-left: 3px solid transparent; }
+            .tr-sidebar { box-sizing: border-box; flex: 0 0 180px;
+                background: #050505; border-right: 1px solid #222; padding: 1rem 0; display: flex; flex-direction: column; overflow-y: auto;
+            }
+            .tr-sidebar-header { padding: 0 1.2rem 1.2rem 1.2rem;
+                font-size: 1.1rem; font-weight: bold; color: #fff; border-bottom: 1px solid #222; margin-bottom: 0.5rem;
+            }
+            .tr-tab-btn { padding: 0.8rem 1.2rem; cursor: pointer;
+                color: #666; transition: 0.2s; font-size: 0.9rem; border-left: 3px solid transparent;
+            }
             .tr-tab-btn:hover { background: #111; color: #fff; }
             .tr-tab-btn.active { background: #111; color: #fff; border-left-color: #fff; }
 
@@ -507,11 +526,14 @@
 
             /* Fancy Credits */
             .tr-credit-card {
-                background: #111; border: 1px solid #333; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;
-                cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; gap: 4px;
+                background: #111;
+                border: 1px solid #333; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;
+                cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column;
+                gap: 4px;
             }
             .tr-credit-card:hover {
-                background: #161616; border-color: #666; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+                background: #161616;
+                border-color: #666; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             }
             .tr-credit-role { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #666; }
             .tr-credit-name { font-size: 1.1rem; font-weight: bold; color: #fff; }
@@ -580,7 +602,6 @@
 
     function createTapeUI() {
         if (document.getElementById('tr-tape-overlay')) return;
-
         const dimmer = document.createElement('div');
         dimmer.id = 'tr-focus-dimmer';
         document.body.appendChild(dimmer);
@@ -588,7 +609,6 @@
 
         const overlay = document.createElement('div');
         overlay.id = 'tr-tape-overlay';
-
         const windowDiv = document.createElement('div');
         windowDiv.id = 'tr-tape-window';
         overlay.appendChild(windowDiv);
@@ -674,7 +694,8 @@
         if(state.dom.progress) state.dom.progress.style.display = CFG.showProgressBar ? 'block' : 'none';
 
         if (state.dom.wpm) {
-             state.dom.wpm.style.opacity = (CFG.showLiveWpm && state.isRacing) ? 1 : 0;
+             state.dom.wpm.style.opacity = (CFG.showLiveWpm && state.isRacing) ?
+            1 : 0;
         }
 
         const bodyRect = document.body.getBoundingClientRect();
@@ -682,14 +703,12 @@
         const absLeft = textRect.left - bodyRect.left;
 
         const h = CFG.tapeHeight;
-
         if (CFG.coverMode) {
             state.dom.tape.style.left = absLeft + 'px';
             state.dom.tape.style.top = absTop + 'px';
             state.dom.tape.style.width = textRect.width + 'px';
             state.dom.tape.style.height = textRect.height + 'px';
             state.dom.tape.style.transform = 'none';
-
             state.dom.window.style.height = h + 'px';
             state.dom.window.style.display = 'flex';
             state.dom.window.style.alignItems = 'center';
@@ -734,21 +753,18 @@
             const offsetY = (Math.random() - 0.5) * 20;
             p.style.left = (centerX + offsetX) + 'px';
             p.style.top = (centerY + offsetY) + 'px';
-
             const angle = Math.random() * Math.PI * 2;
             const velocity = 20 + Math.random() * 30;
             const tx = Math.cos(angle) * velocity;
             const ty = Math.sin(angle) * velocity;
 
             p.style.transition = `transform 0.5s ease-out, opacity 0.5s ease-out`;
-
             state.dom.window.appendChild(p);
 
             requestAnimationFrame(() => {
                 p.style.transform = `translate(${tx}px, ${ty}px) scale(0)`;
                 p.style.opacity = '0';
             });
-
             setTimeout(() => { p.remove(); }, 500);
         }
     }
@@ -759,7 +775,7 @@
 
         if (!CFG.dynamicLighting) {
              overlay.style.boxShadow = '';
-             return;
+            return;
         }
 
         const wpm = state.currentWpm || 0;
@@ -769,7 +785,6 @@
         if (state.semaphoreState === 'green') color = '#33ff33';
         else if (state.semaphoreState === 'red') color = '#ff3333';
         else if (state.semaphoreState === 'yellow') color = '#ffcc00';
-
         const alpha = Math.min(0.2 + (wpm / 200), 0.8);
 
         overlay.style.boxShadow = `0 0 ${intensity}px ${color}, 0 4px 15px rgba(0,0,0,0.5)`;
@@ -777,7 +792,6 @@
 
     function updateFocusMode() {
         if (!state.dom.dimmer) return;
-
         state.dom.dimmer.style.backgroundColor = `rgba(0,0,0, ${CFG.focusOpacity})`;
 
         if (CFG.focusMode && state.isRacing && !state.tempFocusDisabled) {
@@ -845,20 +859,30 @@
             if (CFG.particleMode) spawnParticles();
         }
 
+        // --- FIX START: Handle race completion / word commit correctly ---
         if (inputVal.length === 0 && state.lastInputVal.length > 0) {
-            const remainingText = state.activeText.substring(state.committedIndex);
-            const nextSpaceIndex = remainingText.indexOf(' ');
-            const wordEndIndex = (nextSpaceIndex === -1) ? remainingText.length : nextSpaceIndex + 1;
-            const expectedWord = remainingText.substring(0, wordEndIndex);
-            const cleanLast = state.lastInputVal.trim();
-            const cleanExpected = expectedWord.trim();
-            if (cleanLast === cleanExpected) {
-                state.committedIndex += expectedWord.length;
+            // Check if we've completed the entire text (or close enough that the last word was just committed)
+            // We use state.lastInputVal.trim().length because the user just cleared that word.
+            if (state.committedIndex + state.lastInputVal.trim().length >= state.activeText.length) {
+                // We've finished the race, commit everything
+                state.committedIndex = state.activeText.length;
             } else {
-                const confirmed = countGreenChars(state.dom.target);
-                if (confirmed > state.committedIndex) state.committedIndex = confirmed;
+                const remainingText = state.activeText.substring(state.committedIndex);
+                const nextSpaceIndex = remainingText.indexOf(' ');
+                const wordEndIndex = (nextSpaceIndex === -1) ? remainingText.length : nextSpaceIndex + 1;
+                const expectedWord = remainingText.substring(0, wordEndIndex);
+                const cleanLast = state.lastInputVal.trim();
+                const cleanExpected = expectedWord.trim();
+                if (cleanLast === cleanExpected) {
+                    state.committedIndex += expectedWord.length;
+                } else {
+                    const confirmed = countGreenChars(state.dom.target);
+                    if (confirmed > state.committedIndex) state.committedIndex = confirmed;
+                }
             }
-        } else if (inputVal.length < state.lastInputVal.length) {
+        }
+        // --- FIX END ---
+        else if (inputVal.length < state.lastInputVal.length) {
             const isManualDelete = state.lastInputType && state.lastInputType.toLowerCase().includes('delete');
             if (!isManualDelete) {
                 const expectedSegment = state.activeText.substring(state.committedIndex);
@@ -900,7 +924,6 @@
         }
 
         state.dom.strip.style.transform = `translate3d(-${offsetPixels}px, 0, 0)`;
-
         if (state.dom.progress && state.activeText.length > 0) {
             const pct = (totalIndex / state.activeText.length) * 100;
             state.dom.progress.style.width = `${pct}%`;
@@ -972,7 +995,6 @@
                     createTapeUI();
                     buildStrip(currentText);
                     sync();
-
                     input.addEventListener('input', (e) => {
                         state.lastInputType = e.inputType || "insertText";
                         update();
@@ -1041,7 +1063,6 @@
         requestAnimationFrame(checkZoom);
     };
     checkZoom();
-
     setInterval(() => {
         if (state.activeText && state.dom.tape && (CFG.coverMode || CFG.smartLock)) {
             const gameStatus = document.querySelector('.gameStatusLabel');
